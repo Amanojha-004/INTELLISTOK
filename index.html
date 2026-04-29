@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IntelliStok — Login</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--bg-deep); overflow: hidden; }
+
+    .bg-grid {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .bg-glow {
+      position: fixed;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 70%);
+      top: -200px; left: -100px;
+      pointer-events: none;
+    }
+
+    .bg-glow-2 {
+      position: fixed;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%);
+      bottom: -100px; right: -100px;
+      pointer-events: none;
+    }
+
+    .login-wrapper {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-left {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      position: relative;
+    }
+
+    .login-right {
+      width: 560px;
+      background: var(--bg-base);
+      border-left: 1px solid var(--border-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+    }
+
+    .brand-side { max-width: 480px; }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 48px;
+    }
+
+    .brand-icon {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--accent), #00a888);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 24px;
+      color: var(--bg-deep);
+      box-shadow: 0 0 40px rgba(0,212,170,0.4);
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-name span { color: var(--accent); }
+
+    .brand-headline {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    .brand-headline .hl { color: var(--accent); }
+
+    .brand-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+
+    .feature-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .feature-dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent);
+      flex-shrink: 0;
+    }
+
+    .login-card { width: 100%; max-width: 400px; }
+
+    .login-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: -0.4px;
+    }
+
+    .login-sub {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+    }
+
+    .login-btn {
+      width: 100%;
+      justify-content: center;
+      padding: 13px;
+      font-size: 15px;
+      margin-top: 24px;
+      border-radius: var(--radius);
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .divider-line { flex: 1; height: 1px; background: var(--border-muted); }
+    .divider-text { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); }
+
+    .demo-btn {
+      width: 100%;
+      justify-content: center;
+      padding: 11px;
+      font-size: 14px;
+      border-radius: var(--radius);
+    }
+
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 12px;
+      color: var(--accent);
+      margin-top: -10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .forgot-link:hover { text-decoration: underline; }
+
+    .error-msg {
+      background: var(--red-dim);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--red);
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .login-footer {
+      margin-top: 32px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .floating-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .fstat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-muted);
+      border-radius: 10px;
+      padding: 14px 18px;
+    }
+
+    .fstat-val {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .fstat-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    @media (max-width: 900px) {
+      .login-left { display: none; }
+      .login-right { width: 100%; border-left: none; }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1.05); }
+    }
+
+    .brand-icon { animation: pulse-glow 3s ease infinite; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="bg-glow-2"></div>
+
+  <div class="login-wrapper">
+    <!-- Left Brand Panel -->
+    <div class="login-left">
+      <div class="brand-side">
+        <div class="brand-logo">
+          <div class="brand-icon">IS</div>
+          <div class="brand-name">Intelli<span>Stok</span></div>
+        </div>
+
+        <div class="brand-headline">
+          Smart Stock.<br>
+          <span class="hl">Zero Guesswork.</span>
+        </div>
+
+        <p class="brand-desc">
+          IntelliStok is a next-generation inventory management platform built for modern businesses.
+          Real-time tracking, intelligent alerts, and powerful analytics — all in one place.
+        </p>
+
+        <div class="feature-list">
+          <div class="feature-item"><div class="feature-dot"></div> Real-time inventory tracking across all locations</div>
+          <div class="feature-item"><div class="feature-dot"></div> Automated low-stock alerts and reorder suggestions</div>
+          <div class="feature-item"><div class="feature-dot"></div> Comprehensive supplier & purchase order management</div>
+          <div class="feature-item"><div class="feature-dot"></div> Advanced analytics with visual dashboards</div>
+          <div class="feature-item"><div class="feature-dot"></div> CSV export and multi-format reporting</div>
+        </div>
+
+        <div class="floating-stats">
+          <div class="fstat">
+            <div class="fstat-val">1,284</div>
+            <div class="fstat-label">SKUs Managed</div>
+          </div>
+          <div class="fstat">
+            <div class="fstat-val">₹2.4Cr</div>
+            <div class="fstat-label">Inventory Value</div>
+          </div>
+          <div class="fstat">
+            <div class="fstat-val">98.6%</div>
+            <div class="fstat-label">Accuracy Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Login Panel -->
+    <div class="login-right">
+      <div class="login-card">
+        <div class="login-title">Welcome back</div>
+        <p class="login-sub">Sign in to your IntelliStok account</p>
+
+        <div id="login-error" class="error-msg">Invalid email or password. Please try again.</div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="login-email" class="form-control" placeholder="admin@company.com" value="admin@intellistok.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="login-password" class="form-control" placeholder="Enter your password" value="admin123">
+        </div>
+
+        <a class="forgot-link" onclick="Toast.show('Password reset link sent to your email','success')">Forgot password?</a>
+
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <input type="checkbox" id="remember" checked style="accent-color:var(--accent);cursor:pointer">
+          <label for="remember" style="font-size:13px;color:var(--text-secondary);cursor:pointer">Remember me for 30 days</label>
+        </div>
+
+        <button class="btn btn-primary login-btn" onclick="handleLogin()">
+          Sign In →
+        </button>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-text">OR CONTINUE AS</div>
+          <div class="divider-line"></div>
+        </div>
+
+        <button class="btn btn-secondary demo-btn" onclick="loginDemo()">
+          🚀 &nbsp; Enter Demo Mode
+        </button>
+
+        <div class="login-footer">
+          IntelliStok v2.4.1 — Final Year Project<br>
+          © 2025 IntelliStok Systems. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="main.js"></script>
+  <script>
+    function handleLogin() {
+      const email    = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errorEl  = document.getElementById('login-error');
+
+      if (!email || !password) {
+        errorEl.textContent = 'Please enter your email and password.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      if (email === 'admin@intellistok.com' && password === 'admin123') {
+        errorEl.style.display = 'none';
+        Toast.success('Login successful! Redirecting...');
+        setTimeout(() => window.location.href = 'dashboard.html', 1200);
+      } else {
+        errorEl.textContent = 'Invalid email or password. Try admin@intellistok.com / admin123';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    function loginDemo() {
+      Toast.success('Loading demo environment...');
+      setTimeout(() => window.location.href = 'dashboard.html', 1000);
+    }
+
+    document.getElementById('login-password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleLogin();
+    });
+
+    // Init toast
+    Toast.init();
+  </script>
+</body>
+</html>

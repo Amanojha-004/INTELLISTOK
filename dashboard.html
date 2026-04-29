@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IntelliStok — Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">IS</div>
+      <div class="logo-text">Intelli<span>Stok</span></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-item active">
+        <div class="nav-icon">📊</div> Dashboard
+      </a>
+      <a href="inventory.html" class="nav-item">
+        <div class="nav-icon">📦</div> Inventory
+        <span class="nav-badge amber">3</span>
+      </a>
+      <a href="orders.html" class="nav-item">
+        <div class="nav-icon">🛒</div> Orders
+        <span class="nav-badge">12</span>
+      </a>
+      <a href="suppliers.html" class="nav-item">
+        <div class="nav-icon">🏭</div> Suppliers
+      </a>
+      <a href="analytics.html" class="nav-item">
+        <div class="nav-icon">📈</div> Analytics
+      </a>
+      <a href="settings.html" class="nav-item">
+        <div class="nav-icon">⚙️</div> Settings
+      </a>
+    </div>
+
+    <div class="sidebar-section" style="margin-top:auto;padding-bottom:8px">
+      <div class="sidebar-section-label">System Status</div>
+      <div style="padding:10px 12px;background:var(--accent-dim);border:1px solid var(--border);border-radius:var(--radius)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:7px;height:7px;background:var(--accent);border-radius:50%;box-shadow:0 0 8px var(--accent)"></div>
+          <span style="font-family:var(--font-mono);font-size:10px;color:var(--accent)">All systems operational</span>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted)">Last sync: <span id="live-clock">--:--:--</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar">AK</div>
+        <div class="user-info">
+          <div class="user-name">Aryan Kumar</div>
+          <div class="user-role">Admin</div>
+        </div>
+        <a href="index.html" style="font-size:18px;color:var(--text-muted)" title="Logout">⏻</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="breadcrumb">IntelliStok / <span>Overview</span></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <span style="color:var(--text-muted)">🔍</span>
+          <input type="text" id="global-search" placeholder="Search anything...">
+          <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">⌘K</span>
+        </div>
+        <div class="dropdown">
+          <button class="icon-btn" data-dropdown-trigger="notif-dropdown">
+            🔔
+            <div class="notif-dot"></div>
+          </button>
+          <div class="dropdown-menu" id="notif-dropdown"></div>
+        </div>
+        <div class="user-avatar" style="width:36px;height:36px;font-size:13px;cursor:pointer" onclick="window.location.href='settings.html'">AK</div>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-wrapper">
+
+      <!-- ALERT BANNER -->
+      <div class="alert alert-warning">
+        ⚠️ &nbsp; <strong>3 items</strong> are below reorder level — <a href="inventory.html" style="color:var(--amber);text-decoration:underline">View Inventory →</a>
+      </div>
+
+      <!-- STATS GRID -->
+      <div class="stats-grid">
+        <div class="stat-card teal" style="animation-delay:0ms">
+          <div class="stat-header">
+            <div class="stat-label">Total SKUs</div>
+            <div class="stat-icon teal">📦</div>
+          </div>
+          <div class="stat-value" data-count="1284" data-prefix="">1284</div>
+          <div class="stat-change up">↑ 2.4% from last month</div>
+        </div>
+        <div class="stat-card amber" style="animation-delay:80ms">
+          <div class="stat-header">
+            <div class="stat-label">Inventory Value</div>
+            <div class="stat-icon amber">💰</div>
+          </div>
+          <div class="stat-value">₹2.4Cr</div>
+          <div class="stat-change up">↑ 8.1% from last month</div>
+        </div>
+        <div class="stat-card red" style="animation-delay:160ms">
+          <div class="stat-header">
+            <div class="stat-label">Low / Out of Stock</div>
+            <div class="stat-icon red">⚠️</div>
+          </div>
+          <div class="stat-value">3 / 2</div>
+          <div class="stat-change down">↑ Needs attention</div>
+        </div>
+        <div class="stat-card blue" style="animation-delay:240ms">
+          <div class="stat-header">
+            <div class="stat-label">Orders This Month</div>
+            <div class="stat-icon blue">🛒</div>
+          </div>
+          <div class="stat-value" id="live-orders" data-count="1284">55</div>
+          <div class="stat-change up">↑ 12.3% vs last month</div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW -->
+      <div class="grid-60-40 section-gap">
+        <!-- Revenue Chart -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Revenue & Orders Overview</div>
+              <div class="card-subtitle">Monthly performance — FY 2025</div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm" data-period="7d">7D</button>
+              <button class="btn btn-secondary btn-sm" data-period="30d">30D</button>
+              <button class="btn btn-secondary btn-sm" data-period="3m">3M</button>
+              <button class="btn btn-primary btn-sm" data-period="1y">1Y</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="height:260px">
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Donut + Weekly -->
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">By Category</div>
+                <div class="card-subtitle">Revenue distribution</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;gap:20px;align-items:center">
+                <div style="width:120px;height:120px;flex-shrink:0">
+                  <canvas id="categoryChart"></canvas>
+                </div>
+                <div class="donut-legend" id="donut-legend" style="flex:1"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Weekly Orders</div>
+            </div>
+            <div class="card-body" style="padding-top:16px">
+              <div class="chart-container" style="height:100px">
+                <canvas id="weeklyChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM ROW -->
+      <div class="grid-70-30">
+        <!-- Top Products Table -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Top Performing Products</div>
+              <div class="card-subtitle">By revenue — current month</div>
+            </div>
+            <a href="inventory.html" class="btn btn-secondary btn-sm">View All →</a>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Units Sold</th>
+                  <th>Stock</th>
+                  <th>Revenue</th>
+                  <th>Trend</th>
+                </tr>
+              </thead>
+              <tbody id="top-products-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Activity Feed + Quick Actions -->
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Live Activity</div>
+              <button class="btn btn-secondary btn-sm" onclick="Toast.success('Activity refreshed')">↻ Refresh</button>
+            </div>
+            <div class="card-body">
+              <div class="activity-list" id="activity-list"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Quick Actions</div>
+            </div>
+            <div class="card-body">
+              <div class="quick-actions">
+                <button class="quick-action" id="quick-add-stock">
+                  <div class="quick-action-icon" style="background:var(--accent-dim)">📦</div>
+                  Add Stock
+                </button>
+                <button class="quick-action" id="quick-new-order">
+                  <div class="quick-action-icon" style="background:var(--blue-dim)">🛒</div>
+                  New Order
+                </button>
+                <button class="quick-action" onclick="window.location.href='suppliers.html'">
+                  <div class="quick-action-icon" style="background:var(--purple-dim)">🏭</div>
+                  Add Supplier
+                </button>
+                <button class="quick-action" onclick="window.location.href='analytics.html'">
+                  <div class="quick-action-icon" style="background:var(--amber-dim)">📈</div>
+                  View Reports
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-wrapper -->
+  </div><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<div id="toast-container"></div>
+
+  <script src="main.js"></script>
+  <script src="dashboard.js"></script>

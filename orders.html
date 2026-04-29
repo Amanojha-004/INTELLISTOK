@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IntelliStok — Orders</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">IS</div>
+      <div class="logo-text">Intelli<span>Stok</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-item"><div class="nav-icon">📊</div> Dashboard</a>
+      <a href="inventory.html" class="nav-item"><div class="nav-icon">📦</div> Inventory <span class="nav-badge amber">3</span></a>
+      <a href="orders.html" class="nav-item active"><div class="nav-icon">🛒</div> Orders <span class="nav-badge">12</span></a>
+      <a href="suppliers.html" class="nav-item"><div class="nav-icon">🏭</div> Suppliers</a>
+      <a href="analytics.html" class="nav-item"><div class="nav-icon">📈</div> Analytics</a>
+      <a href="settings.html" class="nav-item"><div class="nav-icon">⚙️</div> Settings</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar">AK</div>
+        <div class="user-info"><div class="user-name">Aryan Kumar</div><div class="user-role">Admin</div></div>
+        <a href="index.html" style="font-size:18px;color:var(--text-muted)">⏻</a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div>
+          <div class="page-title">Orders</div>
+          <div class="breadcrumb">IntelliStok / <span>Order Management</span></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <span style="color:var(--text-muted)">🔍</span>
+          <input type="text" id="global-search" placeholder="Search...">
+        </div>
+        <div class="dropdown">
+          <button class="icon-btn" data-dropdown-trigger="notif-dropdown">🔔<div class="notif-dot"></div></button>
+          <div class="dropdown-menu" id="notif-dropdown"></div>
+        </div>
+        <div class="user-avatar" style="width:36px;height:36px;font-size:13px;cursor:pointer">AK</div>
+      </div>
+    </header>
+
+    <div class="page-wrapper">
+
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card teal">
+          <div class="stat-header"><div class="stat-label">Total Orders</div><div class="stat-icon teal">📋</div></div>
+          <div class="stat-value" id="stat-total-orders">—</div>
+          <div class="stat-change up">All time</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-header"><div class="stat-label">Pending</div><div class="stat-icon amber">⏳</div></div>
+          <div class="stat-value" id="stat-pending">—</div>
+          <div class="stat-change down">Awaiting action</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-header"><div class="stat-label">In Transit</div><div class="stat-icon purple">🚚</div></div>
+          <div class="stat-value" id="stat-transit">—</div>
+          <div class="stat-change up">On the way</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-header"><div class="stat-label">Order Value</div><div class="stat-icon blue">💰</div></div>
+          <div class="stat-value" id="stat-order-val">—</div>
+          <div class="stat-change up">↑ Total processed</div>
+        </div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <div class="search-box">
+            <span style="color:var(--text-muted)">🔍</span>
+            <input type="text" id="order-search" placeholder="Search by order ID or supplier...">
+          </div>
+          <select class="filter-select" id="order-type">
+            <option value="">All Types</option>
+            <option value="Purchase">Purchase Orders</option>
+            <option value="Sale">Sales Orders</option>
+          </select>
+          <select class="filter-select" id="order-status">
+            <option value="">All Status</option>
+            <option>Pending</option>
+            <option>Confirmed</option>
+            <option>Processing</option>
+            <option>In Transit</option>
+            <option>Shipped</option>
+            <option>Delivered</option>
+            <option>Cancelled</option>
+          </select>
+          <select class="filter-select" id="order-sort">
+            <option value="">Sort By</option>
+            <option value="date-desc">Date: Newest</option>
+            <option value="date-asc">Date: Oldest</option>
+            <option value="amount-desc">Amount: High → Low</option>
+            <option value="amount-asc">Amount: Low → High</option>
+          </select>
+        </div>
+        <div class="toolbar-right">
+          <button class="btn btn-secondary" id="btn-export-orders">⬇️ Export</button>
+          <button class="btn btn-primary" id="btn-create-order">＋ New Order</button>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox" style="accent-color:var(--accent)"></th>
+                <th>Order ID</th>
+                <th>Type</th>
+                <th>Supplier / Client</th>
+                <th>Order Date</th>
+                <th>Expected</th>
+                <th>Items / Qty</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <div class="pagination-info" id="order-pagination-info"></div>
+          <div class="pagination-controls" id="order-pagination-controls"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- VIEW ORDER MODAL -->
+<div class="modal-overlay" id="view-order-modal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="view-order-id">Order Details</div>
+        <div style="display:flex;gap:8px;margin-top:6px" id="view-order-badges">
+          <span id="view-order-type"></span>
+          <span id="view-order-status"></span>
+          <span id="view-priority"></span>
+        </div>
+      </div>
+      <button data-close-modal style="font-size:20px;color:var(--text-muted)">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Supplier / Client</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text-primary)" id="view-supplier">—</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Amount</div>
+          <div style="font-size:18px;font-weight:800;color:var(--accent);font-family:var(--font-display)" id="view-amount">—</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Order Date</div>
+          <div style="font-size:13px;color:var(--text-secondary)" id="view-date">—</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Expected Delivery</div>
+          <div style="font-size:13px;color:var(--text-secondary)" id="view-expected">—</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Items</div>
+          <div style="font-size:13px;color:var(--text-secondary)" id="view-items">—</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Priority</div>
+          <div id="view-priority"></div>
+        </div>
+      </div>
+
+      <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:14px">Order Timeline</div>
+      <div id="order-timeline"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal>Close</button>
+      <button class="btn btn-primary" onclick="Toast.success('Order printed successfully')">🖨️ Print Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- UPDATE STATUS MODAL -->
+<div class="modal-overlay" id="update-status-modal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Update Order Status</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px" id="upd-order-label"></div>
+      </div>
+      <button data-close-modal style="font-size:20px;color:var(--text-muted)">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="upd-order-id">
+      <div class="form-group">
+        <label class="form-label">New Status</label>
+        <select id="upd-status" class="form-control">
+          <option>Pending</option>
+          <option>Confirmed</option>
+          <option>Processing</option>
+          <option>In Transit</option>
+          <option>Shipped</option>
+          <option>Delivered</option>
+          <option>Cancelled</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note (optional)</label>
+        <input type="text" id="upd-note" class="form-control" placeholder="e.g. Tracking: TRK-1234567">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal>Cancel</button>
+      <button class="btn btn-primary" id="btn-update-status">Update Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE ORDER MODAL -->
+<div class="modal-overlay" id="create-order-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Create New Order</div>
+      <button data-close-modal style="font-size:20px;color:var(--text-muted)">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="new-order-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Order ID</label>
+            <input type="text" id="new-order-id" class="form-control" readonly style="opacity:0.6">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Order Type</label>
+            <select id="new-order-type" class="form-control">
+              <option value="Purchase">Purchase Order</option>
+              <option value="Sale">Sales Order</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Supplier / Client *</label>
+          <input type="text" id="new-supplier" class="form-control" placeholder="Supplier or client name">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">No. of Items</label>
+            <input type="number" id="new-items" class="form-control" placeholder="0" min="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Quantity</label>
+            <input type="number" id="new-qty" class="form-control" placeholder="0" min="1">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Order Amount (₹) *</label>
+            <input type="number" id="new-amount" class="form-control" placeholder="0.00" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Expected Date *</label>
+            <input type="date" id="new-expected" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select id="new-priority" class="form-control">
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal>Cancel</button>
+      <button class="btn btn-primary" id="btn-save-order">Create Order</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="main.js"></script>
+<script src="orders.js"></script>
+</body>
+</html>
